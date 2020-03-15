@@ -1,0 +1,267 @@
+<!-- main app container -->
+<div class="jumbotron text-center" style="padding:1.5rem;color: white;background-color: #2e71aa;">
+  <h3 class="display-5">
+    Proformal Invoice - Fushan Technology Vietnam
+  </h3>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <form [formGroup]="registrationForm">
+        <div class="form-group" formGroupName="requestInfor">
+          <h2>Request Information</h2>
+          <hr>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Request Id</label>
+              <input type="text" formControlName="IdRequest" class="form-control" disabled #inputRequestId />
+            </div>
+            <div class="col-md-4">
+              <label>Incoming Date<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="IncomingDate" class="form-control" placeholder="choose here..."
+                [ngClass]="{ 'is-invalid': submitted && f.get('requestInfor.IncomingDate').errors }" bsDatepicker
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                [ngStyle]="{'border':submitted && f.get('requestInfor.IncomingDate').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requestInfor.IncomingDate').errors" class="text-danger">
+                <div *ngIf="f.get('requestInfor.IncomingDate').errors.dateIn">Incoming date must greater than current
+                  date
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>Outgoing Date<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="OutgoingDate" class="form-control" placeholder="choose here..."
+                [ngClass]="{ 'is-invalid': submitted && f.get('requestInfor.OutgoingDate').errors }" bsDatepicker
+                [bsConfig]="{ dateInputFormat: 'DD-MM-YYYY', containerClass: 'theme-dark-blue' }"
+                [ngStyle]="{'border':submitted && f.get('requestInfor.OutgoingDate').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requestInfor').errors" class="text-danger">
+                <div *ngIf="f.get('requestInfor').errors">Outgoing not less than incoming date</div>
+              </div>
+            </div>
+          </div>
+          <!-- Host -->
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Host Name<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="HostName" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requestInfor.HostName').errors }"
+                [ngStyle]="{'border':submitted && f.get('requestInfor.HostName').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requestInfor.HostName').errors" class="text-danger">
+                <!-- <div *ngIf="f.get('requestInfor.HostName').errors.required">Host Name is required</div> -->
+                <div *ngIf="f.get('requestInfor.HostName').errors.minlength">Host Name must be at least 3 characters
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="center-block">Department<span class="text-danger"> (*)</span>
+                <select class="form-control" style="margin-top: 0.5rem;" formControlName="Department">
+                  <option *ngFor="let Department of department" [value]="Department">{{Department}}</option>
+                </select>
+              </label>
+            </div>
+            <div class="col-md-4">
+              <label>Remark</label>
+              <textarea type="text" formControlName="Remark" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" formGroupName="requesterInfor">
+          <h2>Requester Information</h2>
+          <hr>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Name<span class="text-danger">(*)</span></label>
+              <input type="text" formControlName="Name" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requesterInfor.Name').errors }"
+                [ngStyle]="{'border':submitted && f.get('requesterInfor.Name').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requesterInfor.Name').errors" class="text-danger">
+                <div *ngIf="f.get('requesterInfor.Name').errors.minlength">Name must be at least 3 characters</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>Phone Number<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="PhoneNumber" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requesterInfor.PhoneNumber').errors }"
+                [ngStyle]="{'border':submitted && f.get('requesterInfor.PhoneNumber').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requesterInfor.PhoneNumber').errors" class="text-danger">
+                <div *ngIf="f.get('requesterInfor.PhoneNumber').errors.pattern">Phone Number must be correct fomat</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label>Company<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="Company" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requesterInfor.Company').errors }"
+                [ngStyle]="{'border':submitted && f.get('requesterInfor.Company').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Address<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="Address" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requesterInfor.Address').errors }"
+                [ngStyle]="{'border':submitted && f.get('requesterInfor.Address').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+            </div>
+            <div class="col-md-4">
+              <label>Email<span class="text-danger"> (*)</span></label>
+              <input type="text" formControlName="Email" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f.get('requesterInfor.Email').errors }"
+                [ngStyle]="{'border':submitted && f.get('requesterInfor.Email').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+              <div *ngIf="submitted && f.get('requesterInfor.Email').errors" class="text-danger">
+                <div *ngIf="f.get('requesterInfor.Email').errors.pattern">Email must be correct fomat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <h2 style="margin-bottom:2rem;">Equipment Information</h2>
+          <table class="table table-bordered table-striped table-responsive-stack" id="tableOne">
+            <thead class="thead-dark">
+              <tr>
+                <th>#</th>
+                <th>Name <span class="text-danger"> (*)</span></th>
+                <th>PartCode<span class="text-danger">(*)</span></th>
+                <th>Quantity Number<span class="text-danger">(*)</span></th>
+                <th>Quantity Word</th>
+                <th>Image</th>
+                <th>Remark</th>
+                <th class="text-center" style="border-top: 1px solid #ffffff; border-right: 1px solid #ffffff;">
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="equipmentList"
+                *ngFor="let item of registrationForm.controls.equipmentList?.value; let i = index; trackBy:customTrackBy">
+                <tr [formGroupName]="i">
+                  <td style="flex-basis: 14.2857%; text-align: center; font-size: larger; font-weight: bold;">{{i + 1}}
+                  </td>
+                  <td style="flex-basis: 14.2857%;">
+                    <input type="text" formControlName="Name" class="form-control" placeholder="Name"
+                      [ngClass]="{ 'is-invalid': submitted && GetArrayControl.at(i).get('Name').errors }"
+                      [ngStyle]="{'border':submitted && GetArrayControl.at(i).get('Name').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+                  </td>
+                  <td style="flex-basis: 14.2857%;">
+                    <input type="text" class="form-control" formControlName="PartCode" placeholder="Part Code"
+                      [ngClass]="{ 'is-invalid': submitted && GetArrayControl.at(i).get('PartCode').errors }"
+                      [ngStyle]="{'border':submitted && GetArrayControl.at(i).get('PartCode').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+                  </td>
+                  <td style="flex-basis: 14.2857%;">
+                    <input type="text" class="form-control" formControlName="QuantityNumber" placeholder="Number"
+                      [ngClass]="{ 'is-invalid': submitted && GetArrayControl.at(i).get('QuantityNumber').errors }"
+                      [ngStyle]="{'border':submitted && GetArrayControl.at(i).get('QuantityNumber').errors ? '1px solid #9b1c1c' : '1px solid #ccc' }" />
+                    <div *ngIf="submitted && GetArrayControl.at(i).get('QuantityNumber').errors" class="text-danger">
+                      <div *ngIf="GetArrayControl.at(i).get('QuantityNumber').errors.pattern">Phone Number must be
+                        correct fomat</div>
+                    </div>
+                  </td>
+
+
+                  <td style="flex-basis: 14.2857%;">
+                    <input type="text" class="form-control" formControlName="QuantityWord" placeholder="Word">
+                  </td>
+                  <td style="flex-basis: 14.2857%;padding-left: 2.5rem;">
+                    <!-- <div class="avatar-upload">
+                      <div class="avatar-edit">
+                        <input type='file' id="imageUpload{{i}}" accept=".png, .jpg, .jpeg" #fileInput (change)="uploadFile($event,i, inputRequestId.value)" formControlName="file"/>
+                        <label for="imageUpload{{i}}" *ngIf="item.editFile" [ngClass]="['custom-label', 'upload-image']"></label>
+                        <label *ngIf="item.removeUpload" [ngClass]="['custom-label', 'remove-image']" (click)="removeUploadedFile(i)"></label>
+                      </div>
+                      <div class="avatar-preview" > 
+                        <div id="imagePreview" [style.backgroundImage]="'url('+ item.imageUrl +')'">
+                        </div>
+                      </div>
+                    </div> -->
+
+                    <div class="avatar-upload">
+                      <div class="avatar-edit">
+                        <input type='text' id="imageUpload{{i}}" accept=".png, .jpg, .jpeg" #fileInput
+                          (click)="compressFile(i, inputRequestId.value)" formControlName="file" />
+                        <label for="imageUpload{{i}}" *ngIf="item.editFile"
+                          [ngClass]="['custom-label', 'upload-image']"></label>
+                        <label *ngIf="item.removeUpload" [ngClass]="['custom-label', 'remove-image']"
+                          (click)="removeUploadedFile(i)"></label>
+                      </div>
+                      <div class="avatar-preview">
+                        <div id="imagePreview" [style.backgroundImage]="'url('+ item.imageUrl +')'">
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </td>
+                  <td style="flex-basis: 14.2857%;">
+                    <textarea type="text" class="form-control" formControlName="EquipmentRemark"
+                      placeholder="Remark"></textarea>
+                  </td>
+                  <td style="flex-basis: 14.2857%; text-align: center;">
+                    <span name="add0" class="text-success" style="font-size: 3.5rem;" (click)="AddRow(i)">
+                      <i class="fa fa-plus-circle"></i>
+                    </span>
+                    <span name="del0" *ngIf="i > 0" class='text-danger' style="font-size: 3.5rem;"
+                      (click)="RemoveRow(i)">
+                      &nbsp;<i class="fa fa-trash"></i>
+                    </span>
+
+                    <!-- <span name="del0" class='text-primary' style="font-size: 3.5rem;" (click)="showNotification('error', 'hoang dep trai')">
+                      &nbsp;<i class="fa fa-trash"></i> 
+                    </span>  -->
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+        <br>
+        <hr>
+        <div class="form-group text-center">
+          <span class="btn btn-primary" (click)="openModal(template)" id="btnSubmit">Submit</span>
+          &nbsp; <span class="btn btn-danger" (click)="onReset()">Reset</span>
+          <!-- &nbsp; <span class="btn btn-danger" (click)="onSuccess(template1)">Reset</span> -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <button type="button" class="btn btn-primary" (click)="openModal(template)">Open modal</button> -->
+<ng-template #template>
+  <div class="modal-body text-center">
+    <h3>Are you sure?</h3>
+    <h5>Do you want to submit this request</h5>
+    <br>
+    <div class="row">
+      <button type="button" class="btn btn-primary" (click)="onSubmit()">Yes, Send request now</button>
+      &nbsp;
+      <button type="button" class="btn btn-danger" (click)="decline()">No! Review</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template1>
+  <div class="modal-header bg-success" (onHidden)="onReset()" bsModal >
+    <h4 class="modal-title pull-left">Your request has been sent successfully</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closeForm()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Your request id: <b>{{showIdRequest}}</b><br>
+    <br>
+    Have a nice trip in our company.<br>
+    <hr>
+    <div class="text-center">
+      <h4>Fushan Technology Vietnam</h4> 
+    </div>
+  </div>
+</ng-template>
+
+<notifier-container></notifier-container>
+
+<!-- 
+<p>Form value: {{ registrationForm.value | json }}</p>
+<p>Form status: {{ registrationForm.status | json }}</p>
+<p>Form untouched: {{ registrationForm.untouched | json }}</p>
+<p>Form changed: {{ registrationForm.dirty | json }}</p> -->
