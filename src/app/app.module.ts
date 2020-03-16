@@ -19,6 +19,8 @@ import 'firebase/storage';
 
 // Resize image
 import {NgxImageCompressService} from 'ngx-image-compress';
+import { ImgurApiService } from './services/imgur-api.service';
+import {HttpClientModule} from '@angular/common/http';
 
 // Reactive Form Module
 import { ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +34,8 @@ import { ModalModule, BsModalService } from 'ngx-bootstrap/modal';
 
 // Alert
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
+
+
 
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -93,8 +97,9 @@ const customNotifierOptions: NotifierOptions = {
     AngularFireDatabaseModule,
     AngularFireStorageModule,
     NotifierModule.withConfig(customNotifierOptions)
+    ,HttpClientModule
   ],
-  providers: [FirebaseService,AngularFirestore,AngularFirestoreModule,BsModalService, NgxImageCompressService],
+  providers: [FirebaseService,AngularFirestore,AngularFirestoreModule,BsModalService, NgxImageCompressService, ImgurApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

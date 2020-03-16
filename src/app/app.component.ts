@@ -9,6 +9,8 @@ import $ from 'jquery';
 import { finalize, publish } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 
+import { ImgurApiService } from './services/imgur-api.service';
+
 import { NotifierService } from 'angular-notifier';
 
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -16,6 +18,9 @@ import { NgxImageCompressService } from 'ngx-image-compress';
 import { DatePipe } from '@angular/common';
 import { error } from '@angular/compiler/src/util';
 //resize images 
+
+import { Injectable } from '@angular/core';
+import { HttpClientModule, HttpHeaders, HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -56,7 +61,9 @@ export class AppComponent {
     private fileStore: AngularFireStorage,
     private notifier: NotifierService,
     private modalService: BsModalService
-    , private imageCompress: NgxImageCompressService
+    ,private imageCompress: NgxImageCompressService
+    // ,private http: HttpClient
+    ,private imgurService: ImgurApiService
   ) {
     this.createForm();
   }
@@ -130,10 +137,10 @@ export class AppComponent {
 
 
   public RemoveRow(index: number) {
-    const thisFile = this.registrationForm.controls.equipmentList as FormArray;
-    if (thisFile.at(index).get('imageUrl').value.toString() != 'https://i.pinimg.com/originals/ed/eb/45/edeb456ee83829c5fa14f9484ffe7eac.png') {
-      this.fileStore.storage.refFromURL(thisFile.at(index).get('imageUrl').value.toString()).delete();
-    }
+    // const thisFile = this.registrationForm.controls.equipmentList as FormArray;
+    // if (thisFile.at(index).get('imageUrl').value.toString() != 'https://i.pinimg.com/originals/ed/eb/45/edeb456ee83829c5fa14f9484ffe7eac.png') {
+    //   this.fileStore.storage.refFromURL(thisFile.at(index).get('imageUrl').value.toString()).delete();
+    // }
 
     const removeRow = this.registrationForm.controls.equipmentList as FormArray;
     removeRow.removeAt(index);
@@ -150,9 +157,21 @@ export class AppComponent {
     return index;
   }
 
+  // newwwwwwwwwwwwww
+  // upload(b64Image: any) {
+
+  //   const httpOptions = {
+  //     headers: new HttpHeaders({
+  //       Authorization: `Client-ID 5999e2155ec5874`
+  //     }),
+  //   };
+  //   const formData = new FormData();
+  //   formData.append('image', b64Image);
+  //   return this.http.post(`https://api.imgur.com/3/image`, formData, httpOptions);
+  // }
+
 
   imgResultBeforeCompress: string;
-
   imgResultAfterCompress: string;
 
   compressFile(index: number, imageName: number) {
@@ -174,34 +193,45 @@ export class AppComponent {
           fetch(result)
             .then(res => res.blob())
             .then(blob => {
-              var convertFile = new File([blob], "File name", { type: "image/png" })
-              const path = imageName + `/Images` + index + `.png`;
-              const fileRef = this.fileStore.ref(path);
-              const task = this.fileStore.ref(path).put(convertFile);
-              task
-                .snapshotChanges()
-                .pipe(finalize(() => {
-                  fileRef.getDownloadURL().subscribe(profilePicture => {
-                    downloadURL.push(profilePicture);
-                    this.notifier.hideNewest();
-                    $('#btnSubmit').attr('disabled', false);
-                    console.log('2');
-                    thisFile.at(index).patchValue({
-                      imageUrl: downloadURL,
-                      editFile: false,
-                      removeUpload: true
-                    });
-                  });
-                })
-                )
-                .subscribe();
+
+              // Upload Img
+              this.imgurService.upload(blob)
+              .subscribe(
+                res => downloadURL.push(res.data.link)
+              );
+              $('#btnSubmit').attr('disabled', false);
+              thisFile.at(index).patchValue({
+                imageUrl: downloadURL,
+                editFile: false,
+                removeUpload: true
+              });
+
+              // Upload fire base
+              // var convertFile = new File([blob], "File name", { type: "image/png" })
+              // const path = imageName + `/Images` + index + `.png`;
+              // const fileRef = this.fileStore.ref(path);
+              // const task = this.fileStore.ref(path).put(convertFile);
+              // task
+              //   .snapshotChanges()
+              //   .pipe(finalize(() => {
+              //     fileRef.getDownloadURL().subscribe(profilePicture => {
+              //       downloadURL.push(profilePicture);
+              //       this.notifier.hideNewest();
+              //       $('#btnSubmit').attr('disabled', false);
+              //       console.log('2');
+              //       thisFile.at(index).patchValue({
+              //         imageUrl: downloadURL,
+              //         editFile: false,
+              //         removeUpload: true
+              //       });
+              //     });
+              //   })
+              //   )
+              //   .subscribe();
             })
-
-
         }
       );
     });
-
   }
   /*########################## File Upload ########################*/
 
@@ -219,7 +249,6 @@ export class AppComponent {
 
     // Upload file
     let downloadURL: string[] = [];
-
     const path = imageName + `/Images` + index + `.jpg`;
     const fileRef = this.fileStore.ref(path);
     const task = this.fileStore.ref(path).put(file);
